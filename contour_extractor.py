@@ -11,6 +11,13 @@ from pathlib import Path
 from typing import List, Dict, Tuple
 import json
 
+def json_converter(obj):
+    import numpy as np
+    if isinstance(obj, np.integer): return int(obj)
+    if isinstance(obj, np.floating): return float(obj)
+    if isinstance(obj, np.ndarray): return obj.tolist()
+    return str(obj)
+
 
 class ContourExtractor:
     """Класс для извлечения и анализа контуров из изображений"""
@@ -341,7 +348,7 @@ class ContourExtractor:
             
             json_path = output_path.parent / f"{output_path.stem}.json"
             with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
+                json.dump(data, f, indent=2, ensure_ascii=False, default=json_converter)
             
             return True
         

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-
+"""
+Продвинутое распознавание элементов электрических схем
+Использует шаблоны и обучение для лучшего распознавания компонентов
+"""
 
 import cv2
 import numpy as np
@@ -60,7 +63,9 @@ class ElectricalSchematicRecognizer:
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         
         # Бинаризация
-        _, self.binary = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV)
+        self.binary = cv2.adaptiveThreshold(
+            blurred,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY_INV,21,5)
         
         # Морфологические операции
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
@@ -74,9 +79,9 @@ class ElectricalSchematicRecognizer:
             self.binary,
             rho=1,
             theta=np.pi/180,
-            threshold=50,
-            minLineLength=30,
-            maxLineGap=15
+            threshold=35,
+            minLineLength=20,
+            maxLineGap=25
         )
         
         if lines is not None:
@@ -105,7 +110,7 @@ class ElectricalSchematicRecognizer:
             area = cv2.contourArea(contour)
             
             # Пропускаем очень маленькие и очень большие контуры
-            if area < 100 or area > 100000:
+            if area < 40 or area > 150000:
                 continue
             
             x, y, w, h = cv2.boundingRect(contour)
