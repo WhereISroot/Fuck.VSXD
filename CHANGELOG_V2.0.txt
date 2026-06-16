@@ -1,0 +1,157 @@
+
+НОВЫЕ ВОЗМОЖНОСТИ
+────────────────────────────────────
+
+1./ CSV ЭКСПОРТ КОНТУРОВ
+   • Автоматическое извлечение контуров из изображений
+   • Разделение сложных контуров на отдельные части
+   • Экспорт в 3 CSV файла:
+     - *_contours.csv (основные параметры контуров)
+     - *_parts.csv (отдельные части с координатами)
+     - *_vertices.csv (все координаты вершин для Drawing)
+
+2. / УЛУЧШЕННАЯ ОБРАБОТКА ИЗОБРАЖЕНИЙ
+   • Адаптивная пороговая обработка
+   • Морфологические операции (открытие/закрытие)
+   • Лучше выделение деталей и линий
+
+3. / РАЗДЕЛЕНИЕ КОНТУРОВ НА ЧАСТИ
+   • Автоматическое обнаружение отдельных элементов
+   • Поддержка сложных многочастных фигур
+   • Уникальные ID для каждой части
+
+4. / JSON ЭКСПОРТ
+   • Структурированные данные для программной обработки
+   • Полная информация о контурах и их свойствах
+   • Удобный формат для ручной обработки
+
+5. / ВИЗУАЛИЗАЦИЯ
+   • Автоматическое создание изображения с контурами
+   • Разные цвета для разных контуров
+   • Отметки центроидов и ID
+
+6. / УЛУЧШЕННЫЙ ИНТЕРФЕЙС
+   • Две вкладки: "Конвертер" и "Справка"
+   • Опции для выбора формата экспорта
+   • Прогресс-бар и подробные сообщения статуса
+
+7. / ПРИМЕРЫ И ИНСТРУМЕНТЫ
+   • csv_drawer.py - рисование фигур из CSV
+   • test_contours.py - тестирование без GUI
+   • quick_start_guide.py - интерактивное руководство
+
+Основные модули:
+├── contour_extractor.py      Главный модуль извлечения контуров
+├── schematic_converter.py    Обновленный GUI и основной скрипт
+├── csv_drawer.py             Класс для рисования из CSV
+└── test_contours.py          Скрипт тестирования
+
+Документация:
+├── README_UPDATED.md         Подробная документация v2.0
+├── QUICKSTART_V2.md          Это файл
+└── quick_start_guide.py      Интерактивное руководство
+
+
+КАК НАЧАТЬ
+
+ВАРИАНТ 1: Графический интерфейс (GUI) ДЛЯ ВИНДОВС-ГОЕВ
+─────────────────────────────────────────────────────
+
+1. Установите зависимости:
+   $ pip install -r requirements.txt
+
+2. Запустите программу:
+   $ python3 schematic_converter.py
+
+3. В окне программы:
+   • Загрузите изображение
+   • Выберите форматы (CSV и/или VSDX)
+   • Нажмите "Конвертировать"
+
+
+ВАРИАНТ 2: Командная строка (CLI)
+──────────────────────────────────
+
+1. Простое тестирование:
+   $ python3 test_contours.py /path/to/schema.jpg
+
+   Создаст все файлы в текущей директории
+
+2. Для рисования из CSV:
+   $ python3 csv_drawer.py schema_vertices.csv result.jpg
+
+
+ВАРИАНТ 3: В своем коде (Python API)
+─────────────────────────────────────
+
+from contour_extractor import ContourExtractor
+
+extractor = ContourExtractor('schema.jpg')
+extractor.load_image()
+extractor.preprocess_image()
+contours = extractor.extract_contours()
+parts = extractor.split_contours_into_parts()
+
+extractor.export_to_csv('output.csv')
+extractor.export_to_json('output.json')
+extractor.visualize_contours('output.jpg')
+
+
+ВЫХОДНЫЕ ФАЙЛЫ (OUTPUT FILES):
+═════════════════════════════════════════════════════════════════
+
+Для изображения "schema.jpg" будут созданы:
+
+CSV файлы (для Microsoft Drawing):
+├── schema_contours.csv       ← Основные контуры
+├── schema_parts.csv          ← Отдельные части
+└── schema_vertices.csv       ← Вершины (для Drawing)
+
+Данные:
+├── schema_contours.json      ← JSON формат
+
+Визуализация:
+└── schema_visualization.jpg  ← Контуры нарисованы
+
+VSDX (опционально):
+└── schema.vsdx              ← Для Microsoft Visio
+
+ФОРМАТ CSV ФАЙЛОВ:
+═════════════════════════════════════════════════════════════════
+
+schema_contours.csv:
+────────────────────
+contour_id,area,perimeter,center_x,center_y,is_convex,vertices_count,...
+0,1234.56,156.78,245,189,1,8,...
+1,5678.90,234.56,412,267,0,12,...
+
+schema_parts.csv:
+─────────────────
+part_id,parent_contour_id,segment_index,vertex_count,centroid_x,centroid_y,...
+0,0,0,8,245.50,189.25,...
+1,1,0,12,412.30,267.45,...
+
+schema_vertices.csv:
+─────────────────────
+part_id,vertex_index,x,y
+0,0,200,150
+0,1,210,155
+0,2,220,160
+...
+
+
+РЕБОВАНИЯ 
+Обязательные:
+• Python 3.6+
+• OpenCV (cv2)
+• NumPy
+• Pillow
+• PyQt5
+• python-vsdx
+
+Опциональные:
+• pytesseract (для OCR текста)
+• Tesseract-OCR (для распознавания текста)
+
+Установка:
+$ pip install -r requirements.txt
